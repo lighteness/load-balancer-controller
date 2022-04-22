@@ -1,0 +1,6 @@
+apiVersion: network.lighteness.com/v1
+kind: AviLoadBalancerService
+metadata:
+  name: aviloadbalancerservice-sample
+spec:
+  # TODO(user): Add fields here

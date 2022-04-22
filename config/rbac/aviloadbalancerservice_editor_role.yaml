@@ -1,0 +1,24 @@
+# permissions for end users to edit aviloadbalancerservices.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aviloadbalancerservice-editor-role
+rules:
+- apiGroups:
+  - network.lighteness.com
+  resources:
+  - aviloadbalancerservices
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - network.lighteness.com
+  resources:
+  - aviloadbalancerservices/status
+  verbs:
+  - get

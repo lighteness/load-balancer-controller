@@ -1,0 +1,20 @@
+domain: lighteness.com
+layout:
+- go.kubebuilder.io/v3
+projectName: load-balancer-controller
+repo: github.com/lighteness/load-balancer-controller
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: lighteness.com
+  group: network
+  kind: AviLoadBalancerService
+  path: github.com/lighteness/load-balancer-controller/api/v1
+  version: v1
+- controller: true
+  domain: lighteness.com
+  kind: Service
+  version: v1
+version: "3"
