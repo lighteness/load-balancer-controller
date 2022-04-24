@@ -23,6 +23,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -134,9 +135,28 @@ func (r *ServiceReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *ServiceReconciler) setupWatches(c controller.Controller) error {
-	if err := c.Watch(&source.Kind{Type: &corev1.Service{}}, handler.EnqueueRequestsFromMapFunc(r.ServiceMapFunc)); err != nil {
+	if err := c.Watch(&source.Kind{Type: &corev1.Service{}},
+		&handler.EnqueueRequestForObject{},
+		predicate.NewPredicateFuncs(func(o client.Object) bool {
+
+			svc, ok := o.(*corev1.Service)
+			if !ok {
+				panic(fmt.Sprintf("Expected a MachineDeployment but got a %T", o))
+			}
+
+			return svc.Spec.Type == corev1.ServiceTypeLoadBalancer
+
+		})); err != nil {
 		return err
 	}
 
 	return nil
 }
+
+//func (r *ServiceReconciler) setupWatches(c controller.Controller) error {
+//	if err := c.Watch(&source.Kind{Type: &corev1.Service{}}, handler.EnqueueRequestsFromMapFunc(r.ServiceMapFunc)); err != nil {
+//		return err
+//	}
+//
+//	return nil
+//}
